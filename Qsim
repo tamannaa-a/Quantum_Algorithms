@@ -1,0 +1,35 @@
+import numpy as np
+options = {
+'plot': True,
+"rotation_error": {'rx':[1.0, 0.0], 'ry':[1.0, 0.0], 'rz':[1.0,0.0]},
+"tsp_model_error": [1.0, 0.0],
+"thermal_factor": 1.0,
+"decoherence_factor": 1.0,
+"depolarization_factor": 1.0,
+"bell_depolarization_factor": 1.0,
+"decay_factor": 1.0,
+}
+q = QuantumRegister(2)
+c = ClassicalRegister(2)
+circuit = QuantumCircuit(q,c)
+circuit.h([0,1])
+circuit.barrier()
+
+### Step 2: Oracle W=11 ###
+circuit.cz(0,1)
+circuit.barrier()
+
+### Step 3: Grover’s Diffusion Operator  ###
+circuit.h([0,1])
+circuit.x([0,1])
+circuit.cz(0,1)
+circuit.x([0,1])
+circuit.h([0,1])
+circuit.measure(q,c,basis="Ensemble",add_param="Z")
+backend = BasicAer.get_backend('dm_simulator')
+
+### Execute the circuit  ###
+job = execute(circuit, backend=backend, **options)
+job_result = job.result()
+
+prob = print(job_result.results[0].data.ensemble_probability)
