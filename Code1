@@ -1,0 +1,24 @@
+from qiskit_optimization import QuadraticProgram
+from qiskit_optimization.algorithms import MinimumEigenOptimizer
+import networkx as nx
+import numpy as np
+
+# Define a simple graph
+G = nx.Graph()
+G.add_edges_from([(0, 1), (1, 2), (2, 3), (3, 0), (0, 2)])
+
+# Define the optimization problem
+qp = QuadraticProgram()
+for i in range(len(G.nodes)):
+    qp.binary_var(f'x{i}')
+
+# Define the objective function
+linear = np.zeros(len(G.nodes))
+quadratic = np.zeros((len(G.nodes), len(G.nodes)))
+
+for i, j in G.edges:
+    quadratic[i, j] = 1  # Penalizing edges within the same set
+
+qp.minimize(quadratic=quadratic)
+
+print(qp)
