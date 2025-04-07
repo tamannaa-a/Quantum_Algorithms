@@ -1,0 +1,6 @@
+!pip install qiskit qiskit-aer qiskit-optimization
+!pip install qiskit-nature
+!pip install 'qiskit-optimization[cplex]'
+!pip install gurobipy
+!pip install --upgrade qiskit qiskit-optimization qiskit-aer
+!pip install qiskit qiskit-aer --quiet
