@@ -22,3 +22,42 @@ for i, j in G.edges:
 qp.minimize(quadratic=quadratic)
 
 print(qp)
+
+print(oracle.draw())   # Print Oracle
+print(diffuser(2).draw())  # Print Diffuser
+print(grover.draw())   # Print Full Grover Circuit
+
+# If diffuser is a gate, create a QuantumCircuit and add it
+diffuser_circuit = QuantumCircuit(2)
+diffuser_circuit.append(diffuser(2), range(2))
+
+# Print circuit diagrams
+print(oracle.draw())  # Print Oracle Circuit
+print(diffuser_circuit.draw())  # Print Diffuser Circuit
+print(grover.draw())  # Print Full Grover Circuit
+
+print(oracle)
+print(diffuser(2))
+print(grover.draw())
+
+from qiskit_aer import Aer  # Import Aer from qiskit_aer
+from qiskit import QuantumCircuit, transpile, assemble
+from qiskit.visualization import plot_histogram
+
+# Initialize quantum circuit
+qc = QuantumCircuit(2)
+qc.h([0, 1])
+qc.measure_all()  # Measure all qubits
+
+# Set up the Aer simulator
+simulator = Aer.get_backend('qasm_simulator')
+
+# Transpile and run the circuit
+compiled_circuit = transpile(qc, simulator)
+result = simulator.run(compiled_circuit).result()
+
+# Get and plot the results
+counts = result.get_counts()
+plot_histogram(counts)
+
+qc.draw('mpl')
